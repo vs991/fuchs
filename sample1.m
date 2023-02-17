@@ -4,7 +4,7 @@
 %
 %   BATCH SOM
 %
-%   function [t]=batch_SOM
+%   function [t] = batch_SOM
 %
 %   Dr.V.
 %   Revision: 4.8
@@ -17,12 +17,12 @@
 %   initializationtype = rand, linear, grad, oldmap
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [s]=batch_SOM_eud(I,I_orig,mid_epoch,final_epoch,X,Y,find_unique,initializationtype,nodes_weight,normalizationtype,tuning)
+function [s] = batch_SOM_eud(I,I_orig,mid_epoch,final_epoch,X,Y,find_unique,initializationtype,nodes_weight,normalizationtype,tuning)
 
 %rand('seed',sum(clock)*7)
 tic
 if  isinteger(I)
-    I=double(I);
+    I = double(I);
 end
 
 %% find unique profiles if needed
@@ -32,7 +32,7 @@ if find_unique == 1
     I = unique_profiles;
 end
 
-[N_numofrows,dim]=size(I);
+[N_numofrows,dim] = size(I);
 
 %% Convert I data to structure
 disp('Structuring...')
@@ -47,7 +47,7 @@ else
     disp('NO Normalization...')
 end
 
-%final_epoch=input('How long to epoch for?\n');
+%final_epoch = input('How long to epoch for?\n');
 
 %% Load mapsize, number of nodes, square only
 disp('Map Sizing...')
@@ -93,35 +93,35 @@ end
 %% Randomize initial map weights
 disp('Initializing...')
 disp(initializationtype)
-dimensions_map=max(nodes_cartesian_coord);
-mapX=dimensions_map(1);
-mapY=dimensions_map(2);
+dimensions_map = max(nodes_cartesian_coord);
+mapX = dimensions_map(1);
+mapY = dimensions_map(2);
 if strcmpi('rand',initializationtype)
     s = som_randinit(I, 'msize',[mapX mapY]);
     nodes_weight=s.codebook;
 elseif strcmpi('linear',initializationtype)
     s = som_lininit(I, 'msize',[mapX mapY]);
-    nodes_weight=s.codebook;
+    nodes_weight = s.codebook;
 elseif strcmpi('grad',initializationtype)
     % % % % % % % gradient_initialization
     s = som_randinit(I, 'msize',[mapX mapY]);
-    [nodes_weight]=gradient_initialization(s.codebook,nodes_cartesian_coord);
+    [nodes_weight] = gradient_initialization(s.codebook,nodes_cartesian_coord);
     s.codebook=nodes_weight;
     % % % % % % % gradient_initialization
 elseif strcmpi('oldmap',initializationtype)
     s = som_randinit(I, 'msize',[mapX mapY]);
-    s.codebook=nodes_weight;
+    s.codebook = nodes_weight;
 else
     disp('No such initialization! Try again!')
-    s=-1;
+    s = -1;
     return
 end
 
 % % % % % % % sample initialization
 %sequence = randperm(N_numofrows);
-%which_rows=unidrnd(N_numofrows,mapX*mapY,1);
-%s.seq=sequence(1:mapX*mapY);
-%.codebook=I.data(sequence(1:mapX*mapY),:);
+%which_rows = unidrnd(N_numofrows,mapX*mapY,1);
+%s.seq = sequence(1:mapX*mapY);
+%.codebook = I.data(sequence(1:mapX*mapY),:);
 % % % % % % % sample initialization
 
 % s = som_lininit(I, 'msize',[sqrt(N_numofnodes) sqrt(N_numofnodes)]);
